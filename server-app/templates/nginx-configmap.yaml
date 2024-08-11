@@ -1,3 +1,4 @@
+{{- if .Values.nginxconfigmap.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -76,3 +77,4 @@ data:
         <p>Sorry, the page you're looking for doesn't exist.</p>
     </body>
     </html>
+{{- end }}
