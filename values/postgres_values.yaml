@@ -1,0 +1,40 @@
+persistence:
+  enabled: true
+  storageClass: standard
+
+volumePermissions:
+  enabled: true
+
+postgresql:
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql-repmgr
+    tag: 16.3.0-debian-12-r20  # use immutabale tags to avoid any issue in case of any update released.
+
+  existingSecret: "postgres-secrets"
+  passwordKey: "postgresql-password"
+  repmgrPasswordKey: "repmgr-password"
+  database: test
+  replicaCount: 6
+  postgresql.conf:
+    max_connections: 1000
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  extraVolumes:
+    - name: dshm
+      emptyDir:
+        medium: Memory
+        sizeLimit: 512Mi
+  extraVolumeMounts:
+    - name: dshm
+      mountPath: /dev/shm
+
+pgpool:
+  existingSecret: "postgres-secrets"
+  adminPasswordKey: "pgpool-admin-password"
