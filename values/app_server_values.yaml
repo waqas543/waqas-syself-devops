@@ -1,0 +1,42 @@
+replicaCount: 2
+
+image:
+  repository: nginx
+  tag: "latest"
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 32000
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 200Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nginxconfigmap:
+  enabled: true
+
+# Volume mounts and volumes configuration
+volumeMounts:
+  - name: nginx-config
+    mountPath: /etc/nginx/nginx.conf
+    subPath: nginx.conf
+  - name: nginx-html
+    mountPath: /usr/share/nginx/html
+
+volumes:
+  - name: nginx-config
+    configMap:
+      name: nginx-config
+  - name: nginx-html
+    configMap:
+      name: nginx-config
+      items:
+        - key: index.html
+          path: index.html
+        - key: 404.html
+          path: 404.html
